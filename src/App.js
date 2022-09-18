@@ -31,6 +31,7 @@ function App() {
         list.forEach( (video,index) => {
           temp.push(
             <VideoCard
+              videoId={video.videoId}
               key={index}
               thumbnail = {video.thumbnails.high.url}
               description= {video.description}
