@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classes from './App.module.css';
 import axios from './axios';
 import Navbar from './components/Navbar/Navbar';
@@ -9,14 +9,14 @@ function App() {
   const [videos, setVideos] = useState([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [pageLimit, setPageLimit] = useState(5);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
   const pageSize = 10;
 
-
-  useState( ()=>{
+  function apiCall(){
     const options = { 
       params : {
-        page: page,
+        page: page - 1,
         pageSize: pageSize,
         search: search
        }
@@ -24,8 +24,10 @@ function App() {
     axios
       .get("/videos", options)
       .then( (res)=>{
+        console.log(res.data);
+        setTotalCount( Number(res.data.totalCount) );
+        setTotalPages( Number(res.data.totalPages));
         const list = res.data.videos;
-        console.log(list);
         const temp = [];
 
         list.forEach( (video,index) => {
@@ -38,15 +40,32 @@ function App() {
             />
           )
         });
-
-
-
         setVideos(temp);
       })
       .catch( (err)=>{
         console.log(err);
       })
+  }
+
+
+  useState( ()=>{
+    console.log("Page change api call");
+    apiCall();
   }, [page]);
+
+  useEffect( ()=>{
+    console.log("Search change api call");
+    setPage(1);
+    apiCall();
+  }, [search])
+
+  function changePage(diff){
+    console.log("Change page", diff);
+    if( 0 < page + diff && page + diff <= totalPages ){
+      setPage(page+diff);
+      apiCall();
+    }
+  }
 
 
   return (
@@ -55,8 +74,11 @@ function App() {
         search={search} 
         setSearch={setSearch} 
         page={page} 
-        setPage={setPage}
-        pageLimit={pageLimit}/>
+        changePage={changePage}
+        totalCount={totalCount}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        />
 
       <div className={classes["video-container"]}>
         {videos}

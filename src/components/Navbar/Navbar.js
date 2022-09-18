@@ -1,13 +1,12 @@
+import { useEffect, useState } from "react";
 import classes from "./Navbar.module.css";
 
-function Navbar({search, setSearch, page, setPage, pageLimit}){
-
-
-    function searchHandler(e){
-        setSearch(e.target.value)
-    }
+function Navbar({search, setSearch, page, changePage, totalPages, totalCount, pageSize}){
 
     
+    function searchHandler(e){
+        setSearch(e.target.value);
+    }
 
     return <div className={classes["container"]} >
         <nav className="navbar">
@@ -18,29 +17,22 @@ function Navbar({search, setSearch, page, setPage, pageLimit}){
             <div className={classes["pagination-container"]} >
                     <ul className="pagination">
                         <li className="page-item page-link">
-                            <>
+                            <span onClick={ ()=> {changePage(-1)}} >
                                 <span aria-hidden="true">&laquo;</span>
                                 <span className="sr-only">Previous</span>
-                            </>
+                            </span>
                         </li>
-                        
-                        <li className="page-item page-link">1</li>
-                        <li className="page-item page-link active">2</li>
-                        <li className="page-item page-link">3</li>
-
+                        <li className="page-item page-link">{page}</li>
                         <li className="page-item page-link">
-                            <>
+                            <span onClick={ ()=>{changePage(+1)} } >
                                 <span aria-hidden="true">&raquo;</span>
                                 <span className="sr-only">Next</span>
-                            </>
+                            </span>
                         </li>
 
                     </ul>
-
             </div>
-
         </nav>
-
     </div>
 }
 
