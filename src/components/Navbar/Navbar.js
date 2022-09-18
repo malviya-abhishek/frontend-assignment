@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import classes from "./Navbar.module.css";
 
 function Navbar({search, setSearch, page, changePage, totalPages, totalCount, pageSize}){

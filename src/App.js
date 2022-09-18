@@ -29,7 +29,6 @@ function App() {
         setTotalPages( Number(res.data.totalPages));
         const list = res.data.videos;
         const temp = [];
-
         list.forEach( (video,index) => {
           temp.push(
             <VideoCard
