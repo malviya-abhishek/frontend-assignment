@@ -11,12 +11,16 @@ function App() {
   const [search, setSearch] = useState("");
   const [totalPages, setTotalPages] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
-  const pageSize = 10;
+  const pageSize = 8;
 
-  function apiCall(){
+
+  function apiCall(pageNum = 1){
+
+    console.log("Current page to call", pageNum);
+
     const options = { 
       params : {
-        page: page - 1,
+        page: pageNum - 1,
         pageSize: pageSize,
         search: search
        }
@@ -47,22 +51,28 @@ function App() {
   }
 
 
-  useState( ()=>{
-    console.log("Page change api call");
-    apiCall();
-  }, [page]);
+  useState(()=>{
+      console.log("intial api call");
+      apiCall();
+  }, [])
+
+
 
   useEffect( ()=>{
-    console.log("Search change api call");
-    setPage(1);
-    apiCall();
-  }, [search])
+    if(search.length){
+      console.log("Search change api call ", search);
+      setPage(1);
+      apiCall();
+    }
+  }, [search]);
 
   function changePage(diff){
-    console.log("Change page", diff);
-    if( 0 < page + diff && page + diff <= totalPages ){
-      setPage(page+diff);
-      apiCall();
+    let nextPage = page + diff;
+    console.log("Change page", diff, "Next page", nextPage);
+
+    if( 0 < nextPage && nextPage <= totalPages ){
+      setPage(nextPage);
+      apiCall(nextPage);
     }
   }
 
